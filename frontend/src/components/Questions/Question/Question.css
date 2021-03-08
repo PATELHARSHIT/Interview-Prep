@@ -1,0 +1,23 @@
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+.category {
+  background-color: #6C63FF;
+  padding: 3px 12px 3px 12px;
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+}
