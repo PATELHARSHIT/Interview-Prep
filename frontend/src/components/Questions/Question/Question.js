@@ -38,7 +38,7 @@ const Question = ({ question, toggleQuestion }) => {
 						// height: "25px",
 					}}
 				>
-					<a style={{ color: "#000", fontWeight: "500" }} href={question.link}>
+					<a style={{ float: "left", color: "#000", fontWeight: "400" }} href={question.link}>
 						{question.question}
 					</a>
 				</td>

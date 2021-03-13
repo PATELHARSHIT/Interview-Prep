@@ -13,11 +13,14 @@ import Question from "./Question/Question";
 
 const Questions = () => {
 	const [question, setQuestion] = useState([]);
-	const [category, setCategory] = useState(["All"]);
+	const [category, setCategory] = useState([]);
 	const [categories, setCategories] = useState([]);
+	const [done, setDone] = useState();
 	const fetchQuestion = () => {
 		axios.get(`/getQues/${category}`).then((res) => {
 			setQuestion(res.data.questions);
+			const d = res.data.questions.filter((q) => q.done === true).length;
+			setDone(d);
 			// setCategories(res.data.categories);
 		});
 	};
@@ -26,6 +29,8 @@ const Questions = () => {
 		axios.get(`/cat`).then((res) => {
 			setQuestion(res.data.questions);
 			setCategories(res.data.categories);
+			const d = res.data.questions.filter((q) => q.done === true).length;
+			setDone(d);
 		});
 	};
 
@@ -37,7 +42,7 @@ const Questions = () => {
 	useEffect(() => {
 		fetchQuestion();
 		// eslint-disable-next-line
-	}, [category]);
+	}, [category, done]);
 
 	const toggleQuestion = (id) => {
 		const newQuestions = [...question];
@@ -45,6 +50,10 @@ const Questions = () => {
 
 		ques.done = !ques.done;
 		setQuestion(newQuestions);
+
+		const d = newQuestions.filter((q) => q.done === true).length;
+		setDone(d);
+
 		axios.post(`/toggleQues/${id}/${ques.done}`).then(
 			(response) => {
 				console.log(response);
@@ -89,13 +98,21 @@ const Questions = () => {
 						padding: "12px 30px 12px",
 					}}
 				>
-					<FormControl className={classes.formControl}>
-						<InputLabel id="demo-simple-select-label">Category</InputLabel>
+					<FormControl
+						size="small"
+						variant="outlined"
+						className={classes.formControl}
+						style={{ float: "right" }}
+					>
+						<InputLabel id="demo-simple-select-outlined-label">
+							Category
+						</InputLabel>
 						<Select
-							labelId="demo-simple-select-label"
-							id="demo-simple-select"
+							labelId="demo-simple-select-outlined-label"
+							id="demo-simple-select-outlined"
 							value={category}
 							onChange={handleChangeCategory}
+							label="Category"
 						>
 							{categories.map((cat) => (
 								<MenuItem key={cat._id} value={cat.categoryName}>
@@ -104,6 +121,16 @@ const Questions = () => {
 							))}
 						</Select>
 					</FormControl>
+					<tr>
+						<td style={{ float: "left", color: "" }}>
+							<h3>Questions: </h3>
+						</td>
+						<td style={{ float: "left", marginLeft: "12px", color: "#6C63FF" }}>
+							<h3>
+								{done} / {question.length}
+							</h3>
+						</td>
+					</tr>
 
 					<table
 						style={{
@@ -111,18 +138,11 @@ const Questions = () => {
 						}}
 					>
 						<tr>
-							<td>
-								<h3>Questions: </h3>
-							</td>
-							<td>
-								<h3 style={{ float: "left" }}>{question.length}</h3>
-							</td>
-						</tr>
-						<tr>
 							<th
 								style={{
 									width: "25px",
-									color: "#05396B",
+									float: "left",
+									fontWeight: "500",
 								}}
 							>
 								Status
@@ -131,8 +151,8 @@ const Questions = () => {
 								style={{
 									paddingTop: "1px",
 									float: "left",
-									paddingLeft: "35px",
-									color: "#05396B",
+									paddingLeft: "60px",
+									fontWeight: "500",
 								}}
 							>
 								Question
@@ -141,8 +161,8 @@ const Questions = () => {
 								style={{
 									paddingTop: "1px",
 									float: "center",
-									color: "#05396B",
 									width: "200px",
+									fontWeight: "500",
 								}}
 							>
 								Category
